@@ -18,7 +18,12 @@ while True:
     sock = socket.socket()
     sock.connect((host, port))
     sock.send(cmd.encode())
+    sock.close()
     # data = sock.recv(1) is used to ask paperbot for data
     # NOTE: paperbot side of the code has not yet been implemented
     # Everything was implemented using the following information
     # https://techtutorialsx.com/2017/11/13/esp32-arduino-setting-a-socket-server/
+
+'''
+
+'''
