@@ -37,7 +37,7 @@ def init_obstacles():
     for rect in rectObs:
         pygame.draw.rect(screen, black, rect)
 
-def reset():
+def set():
     global count
     screen.fill(white)
     init_obstacles()
@@ -52,7 +52,7 @@ def point_circle_collision(p1, p2, radius):
         return True
     return False
 
-def step_from_to(p1,p2):
+def step(p1,p2):
     if dist(p1,p2) < delta:
         return p2
     else:
@@ -71,7 +71,7 @@ def radius_check(p1, radius):
         list.append((newx,newy))
     return list
 
-def collides(p):    #check if point collides with the obstacle
+def collides(p):
     for point in radius_check(p,GOAL_RADIUS):
         for rect in rectObs:
             if rect.collidepoint(point) == True:
@@ -95,7 +95,7 @@ def main():
     currentState = 'init'
 
     nodes = []
-    reset()
+    set()
 
     while True:
         if currentState == 'init':
@@ -105,8 +105,7 @@ def main():
         elif currentState == 'goalFound':
             currNode = goalNode.parent
             pygame.display.set_caption('Goal Reached')
-            print( "Goal Reached")
-
+            print("Goal Reached")
 
             while currNode.parent != None:
                 pygame.draw.line(screen,red,currNode.point,currNode.parent.point)
@@ -125,12 +124,12 @@ def main():
                     parentNode = nodes[0]
                     for p in nodes:
                         if dist(p.point,rand) <= dist(parentNode.point,rand):
-                            newPoint = step_from_to(p.point,rand)
+                            newPoint = step(p.point,rand)
                             if collides(newPoint) == False:
                                 parentNode = p
                                 foundNext = True
 
-                newnode = step_from_to(parentNode.point,rand)
+                newnode = step(parentNode.point,rand)
                 nodes.append(Node(newnode, parentNode))
                 pygame.draw.line(screen,cyan,parentNode.point,newnode)
 
@@ -141,8 +140,8 @@ def main():
 
 
             else:
-                print("Ran out of nodes... :(")
-                return;
+                print("Ran out of nodes")
+                return
 
         #handle events
         for e in pygame.event.get():
@@ -171,7 +170,7 @@ def main():
                     currentState = 'init'
                     initPoseSet = False
                     goalPoseSet = False
-                    reset()
+                    set()
 
         pygame.display.update()
         fpsClock.tick(10000)
